@@ -140,7 +140,7 @@ export default function Home() {
           <div className="box">
             {data[0] &&
               !isLoading &&
-              data.map((e, i) => {
+              data.map((e: string, i: number) => {
                 return (
                   <div
                     key={i}
