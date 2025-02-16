@@ -32,7 +32,7 @@ export default function Home() {
     if (Object.values(values).length === countRandom) {
       setModalNames(false);
       setIsLoading(true);
-      fetch("https://flask-project-ten.vercel.app/random", {
+      fetch("https://random.just4me.uz/random", {
         method: "POST",
         body: JSON.stringify(Object.values(values)),
         headers: {
