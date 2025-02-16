@@ -11,13 +11,15 @@ export default function Home() {
   const [data, setData] = useState<[string?]>([]);
 
   function onInput(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.value.length > 1) {
-      e.target.value = e.target.value.slice(0, 1);
+    if (e.target.value.length > 2) {
+      e.target.value = e.target.value.slice(0, 2);
     } else if (e.target.value == "0") {
       e.target.value = "";
     }
+    if (e.target.value.length === 2) {
+      e.target.select();
+    }
     setCountRandom(Number(e.target.value));
-    e.target.select();
   }
   const handleCount = () => {
     if (countRandom != 0) {
@@ -32,7 +34,7 @@ export default function Home() {
     if (Object.values(values).length === countRandom) {
       setModalNames(false);
       setIsLoading(true);
-      fetch("https://random.just4me.uz/random", {
+      fetch("/api/py/items", {
         method: "POST",
         body: JSON.stringify(Object.values(values)),
         headers: {
@@ -42,15 +44,17 @@ export default function Home() {
         .then((res) => res.json())
         .then((data1) => {
           setIsLoading(false);
+          console.log(data1);
           setData(data1);
+
           fetch(
-            "https://api.telegram.org/bot1492122720:AAHZdu3yX5Ro4wav1CcyVEtac0zg9Zqo8n4/sendMessage",
+            "https://api.telegram.org/bot7105552018:AAEc1GtTheauK9VbRmdU8cuMuiEmrH_wrQM/sendMessage",
             {
               method: "POST",
               body: JSON.stringify({
                 chat_id: 836696307,
                 text: `Saytizda shu odamlar ismi ramdon qilindi:\n${data1
-                  .map((e:string, i: number) => `${i + 1} - ${e}\n`)
+                  .map((e: string, i: number) => `${i + 1} - ${e}\n`)
                   .join("")
                   .split(",")
                   .join(" ")}`,
@@ -77,7 +81,7 @@ export default function Home() {
             type="tel"
             id="count_users"
             style={{ border: countError ? "1px solid red" : "" }}
-            placeholder="0"
+            placeholder="00"
             onInput={onInput}
           />
           {countError && (
@@ -138,9 +142,10 @@ export default function Home() {
             </div>
           </div>
           <div className="box">
-            {data[0] &&
+            {data &&
+              data[0] &&
               !isLoading &&
-              data.map((e: string, i: number) => {
+              data.map((e, i) => {
                 return (
                   <div
                     key={i}
